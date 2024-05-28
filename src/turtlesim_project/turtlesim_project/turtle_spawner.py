@@ -22,7 +22,7 @@ class TurtleSpawnerNode(Node):
         # a new list to store queue turtles
         self.queue_turtles_ = []
         self.caught_turtle_ = None
-        self.remove_trackline("turtle1")
+        self.set_turtle_color("turtle1")
         self.alive_turtles_publisher_= self.create_publisher(TurtleArray,"alive_turtles", 10)
         # create a publisher for the queue turtle
         self.queue_turtles_publisher_= self.create_publisher(TurtleArray,"queue_turtles", 10)
@@ -36,8 +36,8 @@ class TurtleSpawnerNode(Node):
         # creating service /catch_turtle
         self.catch_turtle_service_ = self.create_service(CatchTurtle, "catch_turtle", self.callback_catch_turtle)
     
-    # Remove track line
-    def remove_trackline(self, turtle_name):
+    # Set the pen color of a specified turtle to red
+    def set_turtle_color(self, turtle_name):
         cli = self.create_client(SetPen, "{}/set_pen".format(turtle_name))
         while not cli.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('service not available, waiting again...')
@@ -110,7 +110,7 @@ class TurtleSpawnerNode(Node):
                 new_turtle.x = x
                 new_turtle.y = y
                 new_turtle.theta = theta
-                self.remove_trackline(new_turtle.name)
+                self.set_turtle_color(new_turtle.name)
                 self.alive_turtles_.append(new_turtle)
                 self.publish_alive_turtles()
         except Exception as e:
